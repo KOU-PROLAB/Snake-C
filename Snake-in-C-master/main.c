@@ -1,189 +1,180 @@
-//Eyup KORURER 13.10.2017
-//GNU GCC compiler ile derlenmiştir.
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>   //Bu kütüphane rand() fonksiyonunu kullanabilmek için eklendi.
-#include <windows.h>    //BU kütüphane sleep() fonksiyonunu kullanabilmek için eklendi.
-#include <conio.h>  //Bu kütüphane getch() ve kbhit() fonksiyonları için eklendi.
+#include <time.h>
+#include <windows.h>
+#include <conio.h>
 
-//Yılan struct yapısıyla yapıldı, çünkü yılanın parçalarına ulaşmak kolay oluyor ve büyüme layını bu şekilde sağlayabileceğimi düşündüm.
-struct yilan
-{
-    int satir;  //Yılanın bir biriminin satırını tutan yer.
-    int sutun;  //Yılanın bir biriminin sütununu tutan yer.
-    struct yilan *sonraki;  //Yılanın en son kısmından baş kısmına doğru ilerlememizi sağlayan pointer.
+//YÄ±lan struct yapÄ±sÄ±yla yapÄ±ldÄ±, ÅŸnkÄ± yÄ±lanÄ±n parÃ§alarÄ±na ulaÅŸmak kolay oluyor ve bÃ¼yÃ¼me layÄ±nÄ± bu ÅŸekilde saÄŸlayabileceÄŸimi dÃ¼ÅŸÃ¼ndÃ¼m.
+struct yilan {
+    int satir;  //YÄ±lanÄ±n bir biriminin satÄ±rÄ±nÄ± tutan yer.
+    int sutun;  //YÄ±lanÄ±n bir biriminin sÄ±tununu tutan yer.
+    struct yilan *sonraki;  //YÄ±lanÄ±n en son kÄ±smÄ±ndan baÅŸ kÄ±smÄ±na doÄŸru ilerlememizi saÄŸlayan pointer.
 };
 
-//İlerleme işlemini bu foksiyonla sağladım
-//struct yilan* tipinde bir fonsiyon bunun sebebi yılan büyüdüğü zaman yeni bir struct oluşturup yeni bir başlangıç pointerı elde ediyor olmamız.
+//ilerleme iÅŸlemini bu foksiyonla saÄŸladÄ±m
+//struct yilan* tipinde bir fonsiyon bunun sebebi yÄ±lan bÃ¼yÃ¼dÃ¼ÄŸÃ¼ zaman yeni bir struct oluÅŸturup yeni bir baÅŸlangÄ± pointer elde ediyor olmamÄ±z.
 
-struct yilan* ilerle(struct yilan *r,int yon,int *boy,int sayac,int *bas)
+struct yilan* ilerle(struct yilan *r, int yon, int *boy, int sayac, int *bas)
 
-//Parametler ve açıklamaları:
-//struct yilan *r=bu parametre yılanın en son birimini gösteren pointer bu değerden başlayıp baş ksımına gelinceye kadar ilerliyeceğiz.
-//int yon=bu parametre ile yılanın gideceği yöne göre ilerleme kaydetmesini sağlıyor.
-//int *boy=yılanın boyunun saklandığı yeri gösteren bi pointer, pointer olma sebebi eğer yılan büyüyorsa boyunu bellekteki gösterdiği yere erişerek değiştirmek.
-//int sayac=bu değişkenin değeri main fonksiyonunda kontrol edilşyor ve haritadaki yem sayısını gösteriyor,eğer yem sayısı '0' ise yılan yemi yemiş yani büyümesi gerek demek.
-//int *bas=iki boyutlu bir dizinin pointerı, burda pointer kullanılma sebebi ise yılanın başının kordinatlarını ayrı bir değişkende saklamak
+//Parametler ve aÃ§Ä±klamalarÄ±:
+//struct yilan *r=bu parametre yÄ±lanÄ±n en son birimini gsteren pointer bu deÄŸerden baÅŸlayÄ±p baÅŸ ksÄ±mÄ±na gelinceye kadar ilerliyeceiz.
+//int yon=bu parametre ile yÄ±lanÄ±n gideceÄŸi yne gÃ¶re ilerleme kaydetmesini saÄŸlÄ±yor.
+//int *boy=yÄ±lanÄ±n boyunun saklandÄ±ÄŸÄ± yeri gsteren bi pointer, pointer olma sebebi eÄŸer yÄ±lan bÃ¼yÃ¼yorsa boyunu bellekteki gsterdiÄŸi yere eriÅŸerek deÄŸiÅŸtirmek.
+//int sayac=bu deÄŸiÅŸkenin deÄŸeri main fonksiyonunda kontrol edilÄ±yor ve haritadaki yem sayÄ±sÄ±nÄ± gsteriyor,eÄŸer yem sayÄ±sÄ± '0' ise yÄ±lan yemi yemiÅŸ yani bÃ¼yÃ¼mesi gerek demek.
+//int *bas=iki boyutlu bir dizinin pointerÄ±, burda pointer kullanÄ±lma sebebi ise yÄ±lanÄ±n baÄ±nÄ±n kordinatlarÄ±nÄ± ayrÄ± bir deÄŸiÅŸkende saklamak
 {
     int i;
-    struct yilan *gecici=r; //Default değeri olarak yılanın en son birimini gösteren pointer'ı atıyoruz.
-    if(sayac==1)//Yani yem mevcutsa bir başka deyişle yılan yemi yememişse
-    {
-        switch (yon)
-        {
-        case 1:   //Yani 'W' tuşuna basıldıysa yukarı yönde ilerleyecektir demektir.
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
+    struct yilan *gecici = r; //Default deÄŸeri olarak yÄ±lanÄ±n en son birimini gsteren pointer'Ä± atÄ±yoruz.
+    if(sayac == 1) { //Yani yem mevcutsa bir baÅŸka deyiÅŸle yÄ±lan yemi yememiÅŸse
+        switch(yon) {
+        case 1:   //Yani 'W' tuÅŸuna basÄ±ldÄ±ysa yukarÄ± yÄ±nde ilerleyecektir demektir.
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
             {
-                //Bu bloktaki yapılan işlemlerin amacı yılanın bir sonraki birimindeki değerleri mevcut birimlere atayarak kaydırma işlemi yapmak.
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                //Bu bloktaki yapÄ±lan iÅŸlemlerin amacÄ± yÄ±lanÄ±n bir sonraki birimindeki deÄŸerleri mevcut birimlere atayarak kaydÄ±rma iÅŸlemi yapmak.
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim yukarı gidiyorsa bu satırın bir birim eksilmesi demek.
-            r->satir=r->satir-1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
-            //Geçici pointerı hiç bir değişikliğe uğramadığı için mevcut yılanın en son birimini gösterir.
+            //EÄŸer yÄ±lan bir birim yukarÄ± gidiyorsa bu satÄ±rÄ±n bir birim eksilmesi demek.
+            r->satir = r->satir - 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
+            //GeÃ§ici pointerÄ± hiÃ§ bir deÄŸiÅŸikliye uÄŸramadÄ±ÄŸÄ± iÅŸin mevcut yÄ±lanÄ±n en son birimini gsterir.
             return gecici;
             break;
-        case 2:   //Yani 'D' tuşuna basıldıysa sağ yönde ilerleyecektir demektir.
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
+        case 2:   //Yani 'D' tuÅŸuna basÄ±ldÄ±ysa saÄŸ yÄ±nde ilerleyecektir demektir.
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
             {
-                //Bu bloktaki yapılan işlemlerin amacı yılanın bir sonraki birimindeki değerleri mevcut birimlere atayarak kaydırma işlemi yapmak.
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                //Bu bloktaki yapÄ±lan iÅŸlemlerin amacÄ± yÄ±lanÄ±n bir sonraki birimindeki deÄŸerleri mevcut birimlere atayarak kaydÄ±rma iÅŸlemi yapmak.
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim sağa gidiyorsa bu sütunun bir birim artması demek.
-            r->sutun=r->sutun+1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
-            //Geçici pointerı hiç bir değişikliğe uğramadığı için mevcut yılanın en son birimini gösterir.
+            //EÄŸer yÄ±lan bir birim saÄŸa gidiyorsa bu sÄ±tunun bir birim artmasÄ± demek.
+            r->sutun = r->sutun + 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
+            //GeÃ§ici pointerÄ± hiÃ§ bir deÄŸiÅŸikliye uÄŸramadÄ±ÄŸÄ± iÅŸin mevcut yÄ±lanÄ±n en son birimini gsterir.
             return gecici;
             break;
-        case 3:    //Yani 'S' tuşuna basıldıysa aşağı yönde ilerleyecektir demektir.
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
+        case 3:    //Yani 'S' tuÅŸuna basÄ±ldÄ±ysa aÅŸaÄŸÄ± yÄ±nde ilerleyecektir demektir.
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
             {
-                //Bu bloktaki yapılan işlemlerin amacı yılanın bir sonraki birimindeki değerleri mevcut birimlere atayarak kaydırma işlemi yapmak.
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                //Bu bloktaki yapÄ±lan iÅŸlemlerin amacÄ± yÄ±lanÄ±n bir sonraki birimindeki deÄŸerleri mevcut birimlere atayarak kaydÄ±rma iÅŸlemi yapmak.
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim aşağı gidiyorsa bu satırın bir birim artması demek.
-            r->satir=r->satir+1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
-            //Geçici pointerı hiç bir değişikliğe uğramadığı için mevcut yılanın en son birimini gösterir.
+            //EÄŸer yÄ±lan bir birim aÅŸaÄŸÄ± gidiyorsa bu satÄ±rÄ±n bir birim artmasÄ± demek.
+            r->satir = r->satir + 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
+            //GeÃ§ici pointerÄ± hiÃ§ bir deÄŸiÅŸikliye uÄŸramadÄ±ÄŸÄ± iÅŸin mevcut yÄ±lanÄ±n en son birimini gsterir.
             return gecici;
             break;
-        case 4://Yani 'A' tuşuna basıldıysa sol yönde ilerleyecektir demektir.
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
+        case 4://Yani 'A' tuÅŸuna basÄ±ldÄ±ysa sol yÄ±nde ilerleyecektir demektir.
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
             {
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim sola gidiyorsa bu sütunun bir birim azalması demek.
-            r->sutun=r->sutun-1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
-            //Geçici pointerı hiç bir değişikliğe uğramadığı için mevcut yılanın en son birimini gösterir.
+            //EÄŸer yÄ±lan bir birim sola gidiyorsa bu sÄ±tunun bir birim azalmasÄ± demek.
+            r->sutun = r->sutun - 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
+            //GeÃ§ici pointerÄ± hiÃ§ bir deÄŸiÅŸikliye uÄŸramadÄ±ÄŸÄ± iÅŸin mevcut yÄ±lanÄ±n en son birimini gsterir.
             return gecici;
             break;
         default:
             break;
         }
-    }
-    else if(sayac==0) //Yem yoksa yani yılan yemi yemişse
-    {
-        gecici=malloc(sizeof(struct yilan));    //Eklenecek olan yeni birim için hafızadan yer alınır ve return değeri olan gecici ye atanır.
-        gecici->sonraki=r;  //Son birimin bir öncesine eklenir artık yeni bir son elemanımız var.
-        gecici->satir=r->satir;    //Yeni eklenen birime eski son elemanın satırı atanır.
-        gecici->sutun=r->sutun;    //Yeni eklenen birime eski son elemanın sütunu atanır.
-        switch (yon)
-        {
-        case 1: //Yani 'W' tuşuna basıldıysa yukarı yönde ilerleyecektir demektir.
+    } else if(sayac == 0) { //Yem yoksa yani yÄ±lan yemi yemiÅŸse
+        gecici = malloc(sizeof(struct yilan));  //Eklenecek olan yeni birim iÃ§in hafÄ±zadan yer alÄ±nÄ±r ve return deÄŸeri olan gecici ye atanÄ±r.
+        gecici->sonraki = r; //Son birimin bir Ã¶ncesine eklenir artÄ±k yeni bir son elemanÄ±mÄ±z var.
+        gecici->satir = r->satir;  //Yeni eklenen birime eski son elemanÄ±n satÄ±rÄ± atanÄ±r.
+        gecici->sutun = r->sutun;  //Yeni eklenen birime eski son elemanÄ±n sÄ±tunu atanÄ±r.
+        switch(yon) {
+        case 1: //Yani 'W' tuÅŸuna basÄ±ldÄ±ysa yukarÄ± yÄ±nde ilerleyecektir demektir.
 
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
-                /* Yeni eklenen birim hiç hareket ettirilmeyecektir fakat aynı zamanda diğer elemanlar ilerleyecek bu sayede yemi yedikten
-                   hemen sonraki hamlede yılanın başı ilerlerken diğer kısımları sabit kalıyormuş gibi görünecek ve yılan bir birim büyüyecektir. */
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
+                /* Yeni eklenen birim hiÃ§ hareket ettirilmeyecektir fakat aynÄ± zamanda diÄŸer elemanlar ilerleyecek bu sayede yemi yedikten
+                   hemen sonraki hamlede yÄ±lanÄ±n baÄ± ilerlerken diÄŸer kÄ±sÄ±mlarÄ± sabit kalÄ±yormuÅŸ gibi gÃ¶rÃ¼necek ve yÄ±lan bir birim bÃ¼yÃ¼yecektir. */
             {
-                //Bu bloktaki yapılan işlemlerin amacı yılanın bir sonraki birimindeki değerleri mevcut birimlere atayarak kaydırma işlemi yapmak.
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                //Bu bloktaki yapÄ±lan iÅŸlemlerin amacÄ± yÄ±lanÄ±n bir sonraki birimindeki deÄŸerleri mevcut birimlere atayarak kaydÄ±rma iÅŸlemi yapmak.
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim yukarı gidiyorsa bu satırın bir birim azalması demek.
-            r->satir=r->satir-1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
+            //EÄŸer yÄ±lan bir birim yukarÄ± gidiyorsa bu satÄ±rÄ±n bir birim azalmasÄ± demek.
+            r->satir = r->satir - 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
 
-            (*boy)++;   //Yılan yemi yediği için boyu bir birim artacaktır.
-            return gecici;  //Artık gecici nin yeni değeri yılana eklenen son birimin adresi.
+            (*boy)++;   //YÄ±lan yemi yediÄŸi iÃ§in boyu bir birim artacaktÄ±r.
+            return gecici;  //ArtÄ±k gecici nin yeni deÄŸeri yÄ±lana eklenen son birimin adresi.
             break;
-        case 2: //Yani 'D' tuşuna basıldıysa sağ yönde ilerleyecektir demektir.
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
-                /* Yeni eklenen birim hiç hareket ettirilmeyecektir fakat aynı zamanda diğer elemanlar ilerleyecek bu sayede yemi yedikten
-                   hemen sonraki hamlede yılanın başı ilerlerken diğer kısımları sabit kalıyormuş gibi görünecek ve yılan bir birim büyüyecektir. */
+        case 2: //Yani 'D' tuÅŸuna basÄ±ldÄ±ysa saÄŸ yÄ±nde ilerleyecektir demektir.
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
+                /* Yeni eklenen birim hiÃ§ hareket ettirilmeyecektir fakat aynÄ± zamanda diÄŸer elemanlar ilerleyecek bu sayede yemi yedikten
+                   hemen sonraki hamlede yÄ±lanÄ±n baÄ± ilerlerken diÄŸer kÄ±sÄ±mlarÄ± sabit kalÄ±yormuÅŸ gibi gÃ¶rÃ¼necek ve yÄ±lan bir birim bÃ¼yÃ¼yecektir. */
             {
-                //Bu bloktaki yapılan işlemlerin amacı yılanın bir sonraki birimindeki değerleri mevcut birimlere atayarak kaydırma işlemi yapmak.
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                //Bu bloktaki yapÄ±lan iÅŸlemlerin amacÄ± yÄ±lanÄ±n bir sonraki birimindeki deÄŸerleri mevcut birimlere atayarak kaydÄ±rma iÅŸlemi yapmak.
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim sağa gidiyorsa bu sütunun bir birim artması demek.
-            r->sutun=r->sutun+1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
+            //EÄŸer yÄ±lan bir birim saÄŸa gidiyorsa bu sÄ±tunun bir birim artmasÄ± demek.
+            r->sutun = r->sutun + 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
 
-            (*boy)++;   //Yılan yemi yediği için boyu bir birim artacaktır.
-            return gecici;  //Artık gecici nin yeni değeri yılana eklenen son birimin adresi.
+            (*boy)++;   //YÄ±lan yemi yediÄŸi iÃ§in boyu bir birim artacaktÄ±r.
+            return gecici;  //ArtÄ±k gecici nin yeni deÄŸeri yÄ±lana eklenen son birimin adresi.
             break;
-        case 3: //Yani 'S' tuşuna basıldıysa aşağı yönde ilerleyecektir demektir.
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
-                /* Yeni eklenen birim hiç hareket ettirilmeyecektir fakat aynı zamanda diğer elemanlar ilerleyecek bu sayede yemi yedikten
-                   hemen sonraki hamlede yılanın başı ilerlerken diğer kısımları sabit kalıyormuş gibi görünecek ve yılan bir birim büyüyecektir. */
+        case 3: //Yani 'S' tuÅŸuna basÄ±ldÄ±ysa aÅŸaÄŸÄ± yÄ±nde ilerleyecektir demektir.
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
+                /* Yeni eklenen birim hiÃ§ hareket ettirilmeyecektir fakat aynÄ± zamanda diÄŸer elemanlar ilerleyecek bu sayede yemi yedikten
+                   hemen sonraki hamlede yÄ±lanÄ±n baÄ± ilerlerken diÄŸer kÄ±sÄ±mlarÄ± sabit kalÄ±yormuÅŸ gibi gÃ¶rÃ¼necek ve yÄ±lan bir birim bÃ¼yÃ¼yecektir. */
             {
-                //Bu bloktaki yapılan işlemlerin amacı yılanın bir sonraki birimindeki değerleri mevcut birimlere atayarak kaydırma işlemi yapmak.
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                //Bu bloktaki yapÄ±lan iÅŸlemlerin amacÄ± yÄ±lanÄ±n bir sonraki birimindeki deÄŸerleri mevcut birimlere atayarak kaydÄ±rma iÅŸlemi yapmak.
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim aşağı gidiyorsa bu satırın bir birim artması demek.
-            r->satir=r->satir+1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
+            //EÄŸer yÄ±lan bir birim aÅŸaÄŸÄ± gidiyorsa bu satÄ±rÄ±n bir birim artmasÄ± demek.
+            r->satir = r->satir + 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
 
-            (*boy)++;   //Yılan yemi yediği için boyu bir birim artacaktır.
-            return gecici;  //Artık gecici nin yeni değeri yılana eklenen son birimin adresi.
+            (*boy)++;   //YÄ±lan yemi yediÄŸi iÃ§in boyu bir birim artacaktÄ±r.
+            return gecici;  //ArtÄ±k gecici nin yeni deÄŸeri yÄ±lana eklenen son birimin adresi.
             break;
-        case 4: //Yani 'A' tuşuna basıldıysa sol yönde ilerleyecektir demektir.
-            for(i=0; i<*boy-1; i++)
-                //En son elemandan başlayıp Baştan bir önceki elemana gidene kadar döner.
-                /* Yeni eklenen birim hiç hareket ettirilmeyecektir fakat aynı zamanda diğer elemanlar ilerleyecek bu sayede yemi yedikten
-                   hemen sonraki hamlede yılanın başı ilerlerken diğer kısımları sabit kalıyormuş gibi görünecek ve yılan bir birim büyüyecektir. */
+        case 4: //Yani 'A' tuÅŸuna basÄ±ldÄ±ysa sol yÄ±nde ilerleyecektir demektir.
+            for(i = 0; i < *boy - 1; i++)
+                //En son elemandan baÅŸlayÄ±p BaÅŸtan bir Ã¶nceki elemana gidene kadar dner.
+                /* Yeni eklenen birim hiÃ§ hareket ettirilmeyecektir fakat aynÄ± zamanda diÄŸer elemanlar ilerleyecek bu sayede yemi yedikten
+                   hemen sonraki hamlede yÄ±lanÄ±n baÄ± ilerlerken diÄŸer kÄ±sÄ±mlarÄ± sabit kalÄ±yormuÅŸ gibi gÃ¶rÃ¼necek ve yÄ±lan bir birim bÃ¼yÃ¼yecektir. */
             {
-                //Bu bloktaki yapılan işlemlerin amacı yılanın bir sonraki birimindeki değerleri mevcut birimlere atayarak kaydırma işlemi yapmak.
-                r->satir=r->sonraki->satir;
-                r->sutun=r->sonraki->sutun;
-                r=r->sonraki;
+                //Bu bloktaki yapÄ±lan iÅŸlemlerin amacÄ± yÄ±lanÄ±n bir sonraki birimindeki deÄŸerleri mevcut birimlere atayarak kaydÄ±rma iÅŸlemi yapmak.
+                r->satir = r->sonraki->satir;
+                r->sutun = r->sonraki->sutun;
+                r = r->sonraki;
             }
-            //Eğer yılan bir birim sola gidiyorsa bu sütunun bir birim azalması demek.
-            r->sutun=r->sutun-1;
-            bas[0]=r->satir;
-            bas[1]=r->sutun;
+            //EÄŸer yÄ±lan bir birim sola gidiyorsa bu sÄ±tunun bir birim azalmasÄ± demek.
+            r->sutun = r->sutun - 1;
+            bas[0] = r->satir;
+            bas[1] = r->sutun;
 
-            (*boy)++;   //Yılan yemi yediği için boyu bir birim artacaktır.
-            return gecici;  //Artık gecici nin yeni değeri yılana eklenen son birimin adresi.
+            (*boy)++;   //YÄ±lan yemi yediÄŸi iÃ§in boyu bir birim artacaktÄ±r.
+            return gecici;  //ArtÄ±k gecici nin yeni deÄŸeri yÄ±lana eklenen son birimin adresi.
             break;
         default:
             break;
@@ -191,237 +182,180 @@ struct yilan* ilerle(struct yilan *r,int yon,int *boy,int sayac,int *bas)
     }
 }
 
-
-//Oyun alanına yem koymaya yarayan fonksiyon.
-//Tek parametre alıyor o da oyun alanını temsil eden fonksiyon.
-void yem(int (*oyun)[30])
-{
-    int yemek,satir,sutun;
-    do
-    {
-        yemek=rand() % 900;   //rand() fonksiyonu sayesinde 0-899 arasında rastgele sayılar üretiyoruz.
-        sutun=(yemek%30)-1;   //Bu ürettiğimiz sayının 30'a bölümünden kalanı sutun'a
-        satir=(yemek/30)-1;   //Bölüm kısmını da satir'a atıyoruz.
-    }
-    while(oyun[satir][sutun]!=0);   //Elde ettiğimiz satır sütunu oyun alanında kontrol ediyoruz orası duvar mı diye.
-    oyun[satir][sutun]=100;    //Eğer koşul sağlanıyorsa oraya 100 atıyoruz.
-    //NOT:Haritada herbir durumun bir değeri var 100 bunlardan sadece birisi.
+//Oyun alanÄ±na yem koymaya yarayan fonksiyon.
+//Tek parametre alÄ±yor o da oyun alanÄ±nÄ± temsil eden fonksiyon.
+void yem(int (*oyun)[30]) {
+    int yemek, satir, sutun;
+    do {
+        yemek = rand() % 900; //rand() fonksiyonu sayesinde 0-899 arasÄ±nda rastgele sayÄ±lar Ä±retiyoruz.
+        sutun = (yemek % 30) - 1; //Bu Ä±rettiÄŸimiz sayÄ±nÄ±n 30'a bÃ¶lÃ¼mÃ¼nden kalanÄ± sutun'a
+        satir = (yemek / 30) - 1; //BÃ¶lÃ¼m ksmÄ±nÄ± da satir'a atÄ±yoruz.
+    } while(oyun[satir][sutun] != 0); //Elde ettiÄŸimiz satÄ±r sÄ±tunu oyun alanÄ±nda kontrol ediyoruz orasÄ± duvar mÄ± diye.
+    oyun[satir][sutun] = 100;  //EÄŸer koÅŸul saÄŸlanÄ±yorsa oraya 100 atÄ±yoruz.
+    //NOT:Haritada herbir durumun bir deÄŸeri var 100 bunlardan sadece birisi.
 }
-
 
 //yazdir fonksiyonu mevcut durumu ekrana basmaya yarayan foksiyon.
-void yazdir(struct yilan *y,struct yilan *yi,int (*oyun)[30],int boy,int *bas,int *bitis,int skor)
-
-//Parametreler ve açıklamaları:
-//struct yilan *y=struct yilan tipindeki pointer sayesinde yılanın yerini bulup oraya değer atamak için kullanılıyor.
-//struct yilan *yi=struct yilan tipindeki pointer sayesinde y pointerının yılanın en sonuna tekrardan dönmesi sağlanıyor.
-//int (*oyun)[30]=Oyun haritasını bu pointer sayesinde kullanacağız.
-//int boy=yılanın sonundan başına giderken kullandığımız döngülerde döngünün kaç defa döneceğini belirliyor.
-//int *bas=Yılanın başının koordinatlarını tutan dizinin pointerı.
-//int *bitis=bitis değişkeni oyunun bitip bitmemesi gerektğine karar verir eğer 1'se oyun biter 0'sa oyun devam eder.
-//int skor =Skoru ekrana basabilmemiz için yediğimiz yem sayısını tutan bir sayaç.
+void yazdir(struct yilan *y, struct yilan *yi, int (*oyun)[30], int boy, int *bas, int *bitis, int skor)
+//Parametreler ve aÃ§Ä±klamalarÄ±:
+//struct yilan *y=struct yilan tipindeki pointer sayesinde yÄ±lanÄ±n yerini bulup oraya deÄŸer atamak iÃ§in kullanÄ±lÄ±yor.
+//struct yilan *yi=struct yilan tipindeki pointer sayesinde y pointerÄ±nÄ±n yÄ±lanÄ±n en sonuna tekrardan dnmeleri saÄŸlanÄ±yor.
+//int (*oyun)[30]=Oyun haritasÄ±nÄ± bu pointer sayesinde kullanacaÄŸÄ±z.
+//int boy=yÄ±lanÄ±n sonundan baÄ±na giderken kullandÄ±ÄŸÄ±mÄ±z dngÃ¼lerde dngÃ¼nÃ¼n kaÃ§ defa dneceÄŸini belirliyor.
+//int *bas=YÄ±lanÄ±n baÄ±nÄ±n koordinatlarÄ±nÄ± tutan dizinin pointerÄ±.
+//int *bitis=bitis deÄŸiÅŸkeni oyunun bitip bitmemesi gerektine karar verir eÄŸer 1'se oyun biter 0'sa oyun devam eder.
+//int skor =Skoru ekrana basabilmemiz iÃ§in yediÄŸimiz yem sayÄ±sÄ±nÄ± tutan bir sayÄ±.
 {
-    int i,j;
+    int i, j;
 
-    for(i=0; i<boy-1; i++)
-        //Yılanın sonundan başlayıp başından bir önceki elemana kadar döndürür.
+    for(i = 0; i < boy - 1; i++)
+        //YÄ±lanÄ±n sonundan baÅŸlayÄ±p baÄ±ndan bir Ã¶nceki elemana kadar dnerr.
     {
-        //Eğer yılanın bedeninin bir parçasıysa 10 değeri atıyoruz.
-        oyun[y->satir][y->sutun]=10;
-        //Eğer yılanın bir parçası başa eşitse bitis 1'e eşitlenir.Yani oyun bitecektir.
-        if(y->satir==bas[0] && y->sutun==bas[1])
-        {
-            *bitis=1;
+        //EÄŸer yÄ±lanÄ±n bedeninin bir parÄ±asÄ±ysa 10 deÄŸeri atÄ±yoruz.
+        oyun[y->satir][y->sutun] = 10;
+        //EÄŸer yÄ±lanÄ±n bir parÄ±asÄ± baÄ±a eÅŸitse bitis 1'e eÅŸitlenir.Yani oyun bitecektir.
+        if(y->satir == bas[0] && y->sutun == bas[1]) {
+            *bitis = 1;
         }
-        y=y->sonraki;
+        y = y->sonraki;
     }
-    //Eğer yılanın başıysa 11 değerini atıyoruz.
-    oyun[y->satir][y->sutun]=11;
-    //Eğer başın koordinatları duvarlara eşitse yani dış çepere çarpılmışsa bitis 1'eşitlenir, yani oyun bitecektir.
-    if(bas[0]==0 || bas[0]==29 || bas[1]==0 || bas[1]==29)
-    {
-        *bitis=1;
+    //EÄŸer yÄ±lanÄ±n baÄ±ysa 11 deÄŸerini atÄ±yoruz.
+    oyun[y->satir][y->sutun] = 11;
+    //EÄŸer baÄ±n koordinatlarÄ± duvarlara eÅŸitse yani dÄ±ÅŸ epere arpÄ±lmÄ±ÅŸsa bitis 1'eÅŸitlenir, yani oyun bitecektir.
+    if(bas[0] == 0 || bas[0] == 29 || bas[1] == 0 || bas[1] == 29) {
+        *bitis = 1;
     }
-    //Ekrana basmamızı sağlayan döngü
-    for(i=0; i<30; i++)
-    {
-        for(j=0; j<30; j++)
-        {
-            //UYARI:Döngüde karakterleri ikişer defa basmaktaki amaç ascii tablosundaki karakterlerin boyunun eninin 2 katı olması.
-            //Eğer oyun alanı 1'e eşitse burası dış çeper demektir.
-            if(oyun[i][j]==1)
-            {
-                //Ascii de 219 değeri olan karkteri ekrana basar.
-                printf("%c%c",219,219);
+    //Ekrana basmamÄ±zÄ± saÄŸlayan dngÃ¼
+    for(i = 0; i < 30; i++) {
+        for(j = 0; j < 30; j++) {
+            //UYARI:DngÃ¼de karakterleri ikiÅŸer defa basmaktaki amaÃ§ ascii tablosundaki karakterlerin boyunun eninin 2 katÄ± olmasÄ±.
+            //EÄŸer oyun alanÄ± 1'e eÅŸitse burasÄ± dÄ±ÅŸ eper demektir.
+            if(oyun[i][j] == 1) {
+                //Ascii de 219 deÄŸeri olan karkteri ekrana basar.
+                printf("%c%c", 219, 219);
             }
-            //Eğer oyun alanı 100'e eşitse burada yem var demektir.
-            else if(oyun[i][j]==100)
-            {
-                //Ascii de 254 değeri olan karkteri ekrana basar.
-                printf("%c ",254);
+            //EÄŸer oyun alanÄ± 100'e eÅŸitse burada yem var demektir.
+            else if(oyun[i][j] == 100) {
+                //Ascii de 254 deÄŸeri olan karkteri ekrana basar.
+                printf("%c ", 254);
             }
-            //Eğer oyun alanı 0'a eşitse burada hiç birşey yok demektir.
-            else if(oyun[i][j]==0)
-            {
-                //Bu alanda hiç birşey yoktur iki boşluk karakteri konur.
+            //EÄŸer oyun alanÄ± 0'a eÅŸitse burada hiÃ§ birÅŸey yok demektir.
+            else if(oyun[i][j] == 0) {
+                //Bu alanda hiÃ§ birÅŸey yoktur iki boÅŸluk karakteri konur.
                 printf("  ");
             }
-            //Eğer oyun alanı 10'a eşitse burada yılanın bedeni var demektir.
-            else if(oyun[i][j]==10)
-            {
-                //Ascii de 177 değeri olan karkteri ekrana basar.
-                printf("%c%c",177,177);
+            //EÄŸer oyun alanÄ± 10'a eÅŸitse burada yÄ±lanÄ±n bedeni var demektir.
+            else if(oyun[i][j] == 10) {
+                //Ascii de 177 deÄŸeri olan karkteri ekrana basar.
+                printf("%c%c", 177, 177);
             }
-            //Eğer oyun alanı 11'a eşitse burada yılanın başı var demektir.
-            else if(oyun[i][j]==11)
-            {
-                //Ascii de 232 değeri olan karkteri ekrana basar.
-                printf("%c%c",232,232);
+            //EÄŸer oyun alanÄ± 11'a eÅŸitse burada yÄ±lanÄ±n baÄ± var demektir.
+            else if(oyun[i][j] == 11) {
+                //Ascii de 232 deÄŸeri olan karkteri ekrana basar.
+                printf("%c%c", 232, 232);
             }
-            //Oyun alanıyın sağ üst küşesine skoru basar.
-            if(i==0 && j==29)
-            {
-                printf("SCORE=%d",skor*5);
+            //Oyun alanÄ±yÄ±n saÄŸÄ±st kÄ±esine skoru basar.
+            if(i == 0 && j == 29) {
+                printf("SCORE=%d", skor * 5);
             }
         }
         printf("\n");
     }
-    //Yılanın sonuna tekrar dönüp yılanın olduğu yerdeki değerleri 0'a eşitlenmeli.
-    //Bunun için y=yi işlemi yapılır.
-    y=yi;
-    for(i=0; i<boy-1; i++)
-    {
-        oyun[y->satir][y->sutun]=0;
-        y=y->sonraki;
+    //YÄ±lanÄ±n sonuna tekrar dnmÄ±p yÄ±lanÄ±n olduÄŸu yerdeki deÄŸerleri 0'a eÅŸitlenmeli.
+    //Bunun iÃ§in y=yi iÅŸlemi yapÄ±lÄ±r.
+    y = yi;
+    for(i = 0; i < boy - 1; i++) {
+        oyun[y->satir][y->sutun] = 0;
+        y = y->sonraki;
     }
-    oyun[y->satir][y->sutun]=0;
+    oyun[y->satir][y->sutun] = 0;
 }
 
-
-int main()
-{
+int main() {
     srand(time(NULL));
-    int oyun[30][30]; //Oyun alanını tercihe bağlı olarak 30x30 büyüklüğünde oluşturdum.
-    int i,j,boy=3,satir,sutun,sayac=1,bitis=0,yedigi_yem=0; //Değişkenlerin neden tanımlandığını kullandığım alanlarda anlayacaksınızdır.
-    char yon=100,eski_yon=100; //Bir başlangıç değeri olarak 100 atama sebebim yılanın oyun başlangıcında sağ tarafa doğru hareket etmeseni istemem.
-    for(i=0; i<30; i++) //Oyun alanın dış çeperini belirtmek için 1 değerini atadım.
-    {
-        for(j=0; j<30; j++)
-        {
-            if(i==0 || j==0 || i==29 || j==29)
-            {
-                oyun[i][j]=1;
-            }
-            else
-            {
-                oyun[i][j]=0;
+    int oyun[30][30]; //Oyun alanÄ±nÄ± tercihe baÄ±lÄ± olarak 30x30 bÃ¼yÃ¼klÃ¼ÄŸÃ¼nde oluÅŸturdum.
+    int i, j, boy = 3, satir, sutun, sayac = 1, bitis = 0, yedigi_yem = 0; //DeÄŸiÅŸkenlerin neden tanÄ±mlandÄ±ÄŸÄ±nÄ± kullandÄ±ÄŸÄ±m alanlarda anlayacaksÄ±nÄ±zdÄ±r.
+    char yon = 100, eski_yon = 100; //Bir baÅŸlangÄ± deÄŸeri olarak 100 atama sebebim yÄ±lanÄ±n oyun baÅŸlangÄ±cÄ±nda saÄŸ tarafa doÄŸru hareket etmeseni istemem.
+    for(i = 0; i < 30; i++) { //Oyun alanÄ±nÄ± dÄ±ÅŸ eperi belirtmek iÃ§in 1 deÄŸeri atadÄ±m.
+        for(j = 0; j < 30; j++) {
+            if(i == 0 || j == 0 || i == 29 || j == 29) {
+                oyun[i][j] = 1;
+            } else {
+                oyun[i][j] = 0;
             }
         }
     }
-    struct yilan *ilan; //Yılanın ilk elemanı yani kuyruğunu gösteren pointer.
-    struct yilan *root; //ilan pointerının yedeği.
-    ilan=malloc(sizeof(struct yilan)); //İlk elemana hafızadan yer alırız.
-    ilan->satir=9; // Yılan yapısının Özelleği olan satir'a bir başlangıç değeri atarız.
-    ilan->sutun=7; // Yılan yapısının Özelleği olan sutun'a bir başlangıç değeri atarız.
-    root=ilan;  //Yedek pointer'a atama yaparız.
-    ilan->sonraki=malloc(sizeof(struct yilan)); //Yılanın gövde kısmına hafızadan yer ayırırız.
-    ilan->sonraki->satir=9; //Yılanın gövde kısmına başlangıç değeri atarız.
-    ilan->sonraki->sutun=8;
-    ilan->sonraki->sonraki=malloc(sizeof(struct yilan)); //Yılanın baş kısmına hafızadan yer ayırırız.
-    ilan->sonraki->sonraki->satir=9; //Yılanın baş kısmına başlangıç değeri atarız.
-    ilan->sonraki->sonraki->sutun=9;
-    ilan->sonraki->sonraki->sonraki=NULL;
-    int bas[2]= {9,9}; //Baş kısmının tutduğu değerleri özellikle ayrı bir dizede saklarız.Sebebi ise sadece ekrana basarken oranın baş kısmı olduğnu bilerek daha rahat ekrana basmak.
-    yem(oyun); //Oyun alanına rastgele yem atılması için yem fonksiyonu çağrılır.
+    struct yilan *ilan; //YÄ±lanÄ±n ilk elemanÄ± yani kuyruÄŸunu gsteren pointer.
+    struct yilan *root; //ilan pointerÄ±nÄ±n yedeÄŸi.
+    ilan = malloc(sizeof(struct yilan)); //ilk elemana hafÄ±zadan yer alÄ±rÄ±z.
+    ilan->satir = 9; // YÄ±lan yapÄ±sÄ±nÄ±n Ã¶zelleÅŸi olan satir'a bir baÅŸlangÄ± deÄŸeri atarÄ±z.
+    ilan->sutun = 7; // YÄ±lan yapÄ±sÄ±nÄ±n Ã¶zelleÅŸi olan sutun'a bir baÅŸlangÄ± deÄŸeri atarÄ±z.
+    root = ilan; //Yedek pointer'a atama yaparÄ±z.
+    ilan->sonraki = malloc(sizeof(struct yilan)); //YÄ±lanÄ±n gvde kÄ±smÄ±na hafÄ±zadan yer ayÄ±rÄ±rÄ±z.
+    ilan->sonraki->satir = 9; //YÄ±lanÄ±n gvde kÄ±smÄ±na baÅŸlangÄ± deÄŸeri atarÄ±z.
+    ilan->sonraki->sutun = 8;
+    ilan->sonraki->sonraki = malloc(sizeof(struct yilan)); //YÄ±lanÄ±n baÄ± kÄ±smÄ±na hafÄ±zadan yer ayÄ±rÄ±rÄ±z.
+    ilan->sonraki->sonraki->satir = 9; //YÄ±lanÄ±n baÄ± kÄ±smÄ±na baÅŸlangÄ± deÄŸeri atarÄ±z.
+    ilan->sonraki->sonraki->sutun = 9;
+    ilan->sonraki->sonraki->sonraki = NULL;
+    int bas[2] = {9, 9}; //BaÄ± kÄ±smÄ±nÄ±n tutduÄŸu deÄŸerleri Ã¶zellikle ayrÄ± bir dizede saklarÄ±z.Sebebi ise sadece ekrana basarken oranÄ±n baÄ± kÄ±smÄ± olduÄŸunu bilerek daha rahat ekrana basmak.
+    yem(oyun); //Oyun alanÄ±na rastgele yem atÄ±lmasÄ± iÃ§in yem fonksiyonu aÄ±rÄ±lÄ±r.
     printf("OYUNA BASLAMAK ICIN HERHANGI BIR TUSA BASIN!!!");
-    getch(); //Oyuna başlayabilmek için getch fonksiyonun herhangi bir tuşa basdıktan sonra enter'a basmadan okuması özelleğini kullandım.
-    do
-    {
+    getch(); //Oyuna baÅŸlayabilmek iÃ§in getch fonksiyonun herhangi bir tuÅŸa basdÄ±ktan sonra enter'a basmadan okumasÄ± Ã¶zelleÅŸini kullandÄ±m.
+    do {
+        if(1) { //Bu kÄ±sma geldiÄŸi sÄ±rece bu sÄ±reci uygulamasÄ±n iÃ§in koÅŸul bloÄŸunun iÃ§ine 1 yazdÄ±m.
+            Sleep(100); //sleep fonksiyonu sayesinde 100 milisaniye oyun akÄ±ÅŸÄ± engelleniyor.Bu fonksiyonu kullanmamÄ±zdaki amaÃ§ BilgisayarÄ± eÄŸer yavaÅŸlatmazsak oyunun Ã§ok hÄ±zlÄ± akacaÄŸÄ± ve oynanamaz hal alamsÄ±.
+            if(kbhit()) { //kbhit fonksiyonunu kullanmamÄ±zdaki amaÃ§ kullanÄ±cÄ±nÄ±n bir tuÅŸa basÄ±p basmadÄ±ÄŸÄ±nÄ± tespit etmek eÄŸer basmazsa yÄ±lanÄ±n eski yÄ±nÄ±nde devam etmesini saÄŸlamak.
 
-        if (1)//Bu kısma geldiği sürece bu süreci uygulamasın için koşul bloğunun içine 1 yazdım.
-        {
-            Sleep(100); //sleep fonksiyonu sayesinde 100 milisaniye oyun akışı engelleniyor.Bu fonksiyonu kullanmamızdaki amaç Bilgisayarı eğer yavaşlatmazsak oyunun çok hızlı akacağı ve oynanamaz hal alamsı.
-            if (kbhit()) //kbhit fonksiyonunu kullanmamızdaki amaç kullanıcının bir tuşa basıp basmadığını tespit etmek eğer basmazsa yılanın eski yönünde devam etmesini sağlamak.
-            {
-
-                yon =getch(); //Eğer tuşa basılırsa bubu saklamak için yon'e atarız.
+                yon = getch(); //EÄŸer tuÅŸa basÄ±lÄ±rsa bubu saklamak iÃ§in yon'e atarÄ±z.
             }
         }
-
-
-
-
-        if(yon==87 || yon==119) //Eğer 'w' veya 'W' ya basılmışsa yani yukarı yönde gidilmesi isteniyorsa,
-        {
-            if(eski_yon==83 || eski_yon==115) //Fakat eski yönü aşağı tarafa doğruysa,
-            {
-                yon=eski_yon; //Eski yönü yeni yöne atarız çünkü yılan kendi içinden geçemez.
+        if(yon == 87 || yon == 119) { //EÄŸer 'w' veya 'W' ya basÄ±lmÄ±ÅŸsa yani yukarÄ± yÄ±nde gidilmesi isteniyorsa,
+            if(eski_yon == 83 || eski_yon == 115) { //Fakat eski yÄ±nÄ± aÅŸaÄŸÄ± tarafa doÄŸruysa,
+                yon = eski_yon; //Eski yÄ±nÄ± yeni yÄ±ne atarÄ±z Ä±nkÄ± yÄ±lan kendi iÄ±nden geÃ§emez.
+            }
+        } else if(yon == 68 || yon == 100) { //EÄŸer 'd' veya 'D' ya basÄ±lmÄ±ÅŸsa yani saÄŸ tarafa gidilmesi isteniyorsa,
+            if(eski_yon == 97 || eski_yon == 65) { //Fakat eski yÄ±nÄ± sol tarafa doÄŸruysa,
+                yon = eski_yon; //Eski yÄ±nÄ± yeni yÄ±ne atarÄ±z Ä±nkÄ± yÄ±lan kendi iÄ±nden geÃ§emez.
+            }
+        } else if(yon == 83 || yon == 115) { //EÄŸer 's' veya 'S' ya basÄ±lmÄ±ÅŸsa yani aÅŸaÄŸÄ± yÄ±nde gidilmesi isteniyorsa,
+            if(eski_yon == 87 || eski_yon == 119) { //Fakat eski yÄ±nÄ± yukarÄ± tarafa doÄŸruysa,
+                yon = eski_yon; //Eski yÄ±nÄ± yeni yÄ±ne atarÄ±z Ä±nkÄ± yÄ±lan kendi iÄ±nden geÃ§emez.
+            }
+        } else if(yon == 65 || yon == 97) { //EÄŸer 'a' veya 'A' ya basÄ±lmÄ±ÅŸsa yani sol tarafa gidilmesi isteniyorsa,
+            if(eski_yon == 68 || eski_yon == 100) { //Fakat eski yÄ±nÄ± saÄŸ tarafa doÄŸruysa,
+                yon = eski_yon; //Eski yÄ±nÄ± yeni yÄ±ne atarÄ±z Ä±nkÄ± yÄ±lan kendi iÄ±nden geÃ§emez.
             }
         }
-        else if(yon==68 || yon==100) //Eğer 'd' veya 'D' ya basılmışsa yani sağ tarafa gidilmesi isteniyorsa,
-        {
-            if(eski_yon==97 || eski_yon==65) //Fakat eski yönü sol tarafa doğruysa,
-            {
-                yon=eski_yon; //Eski yönü yeni yöne atarız çünkü yılan kendi içinden geçemez.
+        if(yon != 87 && yon != 119 && yon != 68 && yon != 100 && yon != 83 && yon != 115 && yon != 65 && yon != 97) { //Bu blok eÄŸer tuÅŸa basÄ±lmazsa eski yÄ±nde devam etmesi iÃ§in yazÄ±lmÄ±ÅŸtÄ±r.
+            yon = eski_yon; //Veya "w,a,s,d" den baÅŸka tuÅŸa basÄ±lmÄ±ÅŸsa Ã¶nemsememesi iÃ§in yazÄ±lmÄ±ÅŸtÄ±r.
+        }// ilerle fonksiyonu yÄ±lanÄ±n yÄ±n doÄŸrultusunda ilerlemesini saÄŸlar.
+        if(yon == 87 || yon == 119) { //EÄŸer 'w' ya basÄ±lmÄ±ÅŸsa ilerle fonksiyonuna 1 parametresini gÃ¶ndeririz.
+            root = ilerle(root, 1, &boy, sayac, bas); //1 burda yukarÄ± yÄ±nÄ± temsil eder.
+        } else if(yon == 100 || yon == 68) { //EÄŸer 'd' ye basÄ±lmÄ±ÅŸsa ilerle fonksiyonuna 2 parametresini gÃ¶ndeririz.
+            root = ilerle(root, 2, &boy, sayac, bas); //2 burda yukarÄ± yÄ±nÄ± temsil eder.
+        } else if(yon == 115 || yon == 83) { //EÄŸer 's' e basÄ±lmÄ±ÅŸsa ilerle fonksiyonuna 3 parametresini gÃ¶ndeririz.
+            root = ilerle(root, 3, &boy, sayac, bas); //3 burda yukarÄ± yÄ±nÄ± temsil eder.
+        } else if(yon == 97 || yon == 65) { //EÄŸer 'a' ya basÄ±lmÄ±ÅŸsa ilerle fonksiyonuna 4 parametresini gÃ¶ndeririz.
+            root = ilerle(root, 4, &boy, sayac, bas); //4 burda yukarÄ± yÄ±nÄ± temsil eder.
+        }
+        eski_yon = yon; //ArtÄ±k ilerlediÄŸimiz yÄ±n eski yÄ±nÄ±mÄ±z olduÄŸuna gÃ¶re.
+        ilan = root; //"root" ilerle fonksiyonundan dnmÄ±nde yÄ±lanÄ±n kuyruÄŸunu gsteriyor olacak fakat "ilan" hiÃ§bir deÄŸiÅŸikliye uÄŸramadÄ±ÄŸÄ± iÃ§in yÄ±lanÄ±n gvdesini gsterecek.
+        system("CLS");//Konsoldaki yazÄ±lan tÃ¼m verileri silmeye yarayan fonksiyon. Haritadaki ilerlemeyi gstermek iÃ§in tÃ¼m verileri sileriz.
+        yazdir(root, ilan, oyun, boy, bas, &bitis, yedigi_yem); //Ve yeni halini ekrana basarÄ±z.
+        sayac = 0; //EÄŸer sayac 0'a eÅŸitse yÄ±lan yemiÅŸ demektir. BÃ¼yle deÄŸiÅŸkeni tutmaktaki amaÃ§ yÄ±lan eÄŸer yemi yemiÅŸse oyun alanÄ±na yeni bir yem atmak ve skor'u hesaplayabilmek iÃ§in.
+        for(i = 0; i < 30; i++) { //Oyun alanÄ±nÄ±n tamamÄ±nÄ± dolaÅŸarak yemin olup olmadÄ±ÄŸÄ±nÄ± kontrol eden yapÄ±.
+            for(j = 0; j < 30; j++) {
+                if(oyun[i][j] == 100)
+                    sayac++; // EÄŸer matrisin deÄŸeri 100 ise yani yem varsa orda sayac 1 artar.
             }
         }
-        else if(yon==83 || yon==115) //Eğer 's' veya 'S' ya basılmışsa yani aşağı yönde gidilmesi isteniyorsa,
-        {
-            if(eski_yon==87 || eski_yon==119) //Fakat eski yönü yukarı tarafa doğruysa,
-            {
-                yon=eski_yon; //Eski yönü yeni yöne atarız çünkü yılan kendi içinden geçemez.
-            }
-        }
-        else if(yon==65 || yon==97) //Eğer 'a' veya 'A' ya basılmışsa yani sol tarafa gidilmesi isteniyorsa,
-        {
-            if(eski_yon==68 || eski_yon==100) //Fakat eski yönü sağ tarafa doğruysa,
-            {
-                yon=eski_yon; //Eski yönü yeni yöne atarız çünkü yılan kendi içinden geçemez.
-            }
-        }
-        if(yon!=87 && yon!=119 && yon!=68 && yon!=100 && yon!=83 && yon!=115 && yon!=65 && yon!=97) //Bu blok eğer tuşa basılmazsa eski yönde devam etmesi için yazılmıştır.
-        {
-            yon=eski_yon; //Veya "w,a,s,d" den başka tuşa basılmışsa önemsememesi için yazılmıştır.
+        if(sayac == 0) { // sayac 0'a eÅŸitse yani oyun alanÄ±nda hiÃ§ yem yoksa,
+            yedigi_yem++; //YediÄŸi yem sayÄ±sÄ± 1 arttÄ±rÄ±lÄ±r.
+            yem(oyun); //Ve oyun alanÄ±na yeni bir yem atÄ±lmasÄ± iÃ§in yem fonksiyonu aÄ±rÄ±lÄ±r.
         }
 
-        // ilerle fonksiyonu yılanın yön doğrultusunda ilerlemesini sağlar.
-        if(yon== 87 || yon==119) //Eğer 'w' ya basılmışsa ilerle fonksiyonuna 1 parametresini göndeririz.
-        {
-            root=ilerle(root,1,&boy,sayac,bas); //1 burda yukarı yönü temsil eder.
-        }
-        else if(yon==100 || yon==68) //Eğer 'd' ye basılmışsa ilerle fonksiyonuna 2 parametresini göndeririz.
-        {
-            root=ilerle(root,2,&boy,sayac,bas); //2 burda yukarı yönü temsil eder.
-        }
-        else if(yon==115 || yon==83) //Eğer 's' e basılmışsa ilerle fonksiyonuna 3 parametresini göndeririz.
-        {
-            root=ilerle(root,3,&boy,sayac,bas); //3 burda yukarı yönü temsil eder.
-        }
-        else if(yon==97 || yon==65) //Eğer 'a' ya basılmışsa ilerle fonksiyonuna 4 parametresini göndeririz.
-        {
-            root=ilerle(root,4,&boy,sayac,bas); //4 burda yukarı yönü temsil eder.
-        }
-        eski_yon=yon; //Artık ilerlediğimiz yön eski yönümüz olduğuna göre.
-        ilan=root; //"root" ilerle fonksiyonundan döndüğünde yılanın kuyruğunu gösteriyor olacak fakat "ilan" hiçbir değişikliğe uğramadığı için yılanın gövdesini gösterecek.
-        system("CLS");//Konsoldaki yazılan tüm verileri silmeye yarayan fonksiyon. Haritadaki ilerlemeyi göstermek için tüm verileri sileriz.
-        yazdir(root,ilan,oyun,boy,bas,&bitis,yedigi_yem); //Ve yeni halini ekrana basarız.
-        sayac=0; //Eğer sayac 0'a eşitse yılan yemiş demektir. Böyle değişkeni tutmaktaki amaç yılan eğer yemi yemişse oyun alanına yeni bir yem atmak ve skor'u hesaplayabilmek için.
-        for(i=0; i<30; i++) //Oyun alanının tamamını dolaşarak yemin olup olmadığını kontrol eden yapı.
-        {
-            for(j=0; j<30; j++)
-            {
-                if(oyun[i][j]==100)
-                    sayac++; // Eğer matrisin değeri 100 ise yani yem varsa orda sayac 1 artar.
-            }
-        }
-        if(sayac==0) // sayac 0'a eşitse yani oyun alanında hiç yem yoksa,
-        {
-            yedigi_yem++; //Yediği yem sayısı 1 arttırılır.
-            yem(oyun); //Ve oyun alanına yeni bir yem atılması için yem fonksiyonu çağrılır.
-        }
-
-    }
-    while(bitis==0); //Oyunun bitip bitmemesi gerektiğini kontrol eden değişken, illerle fonksiyonu içinde pointer yardımıyla değeri değiştirilebiliyor.
-    printf("OYUN  BITTI!!!   SKOR:%d\a",yedigi_yem*5); //OYUN  BITTI!!!
+    } while(bitis == 0); //Oyunun bitip bitmemesi gerektiÄŸini kontrol eden deÄŸiÅŸken, illerle fonksiyonu iÃ§inde pointer yardÄ±mÄ±yla deÄŸeri deÄŸiÅŸtirilebiliyor.
+    printf("OYUN  BITTI!!!   SKOR:%d\a", yedigi_yem * 5); //OYUN  BITTI!!!
     return 0;
 }
